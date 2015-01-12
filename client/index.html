@@ -1,0 +1,374 @@
+<html>
+<head>
+	<title>Duckhunt</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="chat">
+		<div id="messages"></div>
+   		<input type="text" name="message" id="message" placeholder="Your message...">
+   		<button id="submit" onclick="post_message()">Submit</button>
+   		<button id="chatroom" onclick="change_to_chatroom()">Chat room</button>
+   		<button id="leaderboard" onclick="change_to_leaderboard()">Leaderboard</button>
+   		<button id="play_game" onclick="ready()">Play!</button>
+	</div>
+	<div id="leaderboard-page">
+		<div id="board"></div>
+   		<button id="chatroom-leader" onclick="change_to_chatroom()">Chat room</button>
+   		<button id="leaderboard-leader" onclick="change_to_leaderboard()">Leaderboard</button>
+   		<button id="play_game-leader" onclick="ready()">Play!</button>
+	</div>
+	<div id="sidebar"></div>
+	<div id="timebox"></div>
+	<div class="playa_name"></div>
+	<div id="introleft"></div>
+	<div id="introright"></div>
+
+	<script type="text/javascript">
+
+	var socket = io.connect('localhost');
+	// var socket = io.connect('http://10.0.1.148');
+
+	function post_message(){
+		console.log('hey')
+		var message = $('#message').val();
+		socket.emit('message', {message: message})
+	}
+	socket.on('all_messages', function(data){
+		console.log('hey')
+		var append_messages = "";
+		for(e=0; e<data.messages.length;e++){
+			append_messages += "<p>"+data.messages[e].name+': ' + data.messages[e].message+"</p>"
+		}
+		$('#messages').html(append_messages);
+	})
+	socket.on('leader', function(data){
+		createBoard(data)
+	})
+
+	
+	//###################################################//
+	var top_name = 50
+	var top_score = 90
+	var your_score = 0;
+	function createBoard(data){
+		console.log('LEADA')
+		var content
+		for(g=-1; g<9;g++){ 
+			if(g==-1){
+				content += '<table><tr><td colspan="3">Leaderboard</td>'
+			}else if(g==0){
+				if(data.leader[g].score>=0)
+				content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>" 
+				else
+					content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td></td></tr>" 
+			}else{
+				if(data.leader[g].score>=0)
+					content += "<tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>"
+				else
+					content += "<tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td></td></tr>"
+			}
+		}
+		$('#board').html(content)
+	}
+	socket.on('players', function(data){
+		var output = '';
+		for (s=0; s<data.sockets.length; s++){
+			var id = data.sockets[s]
+			top_name = s*90 + 50
+			top_score =  s*90 + 90
+			output += '<div class="player_name '+id+'" style="top:'+top_name+'; color: red">'+data.players[id].name+'</div><div id="'+id+'" class="player_score" style="top:'+top_score+'">Points: '+data.players[id].score+'</div>'
+		}
+		$('#sidebar').html(output);
+	})
+	socket.on('change_score', function(data){
+		var div_id = data.id;
+		$('#'+div_id).html('Points: '+data.players[div_id].score)
+	})
+	socket.on('change_color', function(data){
+		$('.'+data.id).css('color', 'green')
+	})
+	socket.on('start_game', function(data){
+		restart(data);
+	})
+	socket.on('change_to_red', function(data){
+		for(x=0;x<data.id.length;x++){
+			$('.'+data.id[x]).css('color', 'red');
+		}
+	})
+
+	$('#introleft').append('<div id="name">Your Name</div>')
+	$('#introleft').append('<div id="textbox"><input id="player_name" type="text" name="player_name"></div>')
+	$('#introleft').append('<button id="enter" onclick="getName()">Enter</button>')
+	$('#introleft').append('<div id="logo"></div>')
+	function getName(){
+		var player_name = "Player";
+		if ($('#player_name').val()){
+			player_name = $('#player_name').val()
+		}
+		socket.emit('new_player', {player: player_name})
+		$('#introleft').children().fadeOut(1000, function(){
+			for (n=0;n<100;n++){
+				var left_width = 555
+				var right_width = 555
+				var right_left = 555
+				setTimeout(function(){
+					left_width -= 5.55
+					$('#introleft').css('width', left_width)
+				},20*n)
+			}
+			for (o=0;o<100;o++){
+				setTimeout(function(){
+					right_width -= 5.55
+					right_left += 5.55
+					$('#introright').css('left', right_left)
+					$('#introright').css('width', right_width)
+				},20*o)
+			}
+		})
+		$('#timebox').html('Time Left: 0')
+		setTimeout(function(){$('#play_game').fadeIn(1000)}, 2500)
+		//$('#container').append('<button id="play_game" onclick="ready()">Play!</button>')
+	}
+	function change_to_leaderboard(){
+		$('#container').css('display', 'none')
+		$('#leaderboard-page').fadeIn(1000)
+		$('#chat').fadeOut(1000)
+	}
+	function change_to_chatroom(){
+		$('#leaderboard-page').fadeOut(1000)
+		$('#chat').fadeIn(1000, function(){
+			$('#container').css('display', 'block')
+		})
+	}
+
+		//$('#play_game').remove();
+		var duck_count = 0;
+		var ducks = [];
+		var scores = [];
+		var bullets = [];
+		var rate = 3000;
+		var timer = "";
+		var scoreclass = 0;
+		var bulletID = 1000;
+		var game_time = 0;
+		var velocity = 5;
+		var duck_number = 0;
+
+		socket.on('winner', function(data){
+			animateDog(data);
+		})
+		var test = 0
+		function animateDog(data){
+			test ++
+			console.log(test)
+			if(data.max==your_score){
+				var height = 10
+				var top = 360
+				$('#container').append('<div id="dog_win" style="top: 360px; left: 190px; height: 0px"></div>')
+				$('#container').append('<div id="winner">You win with '+data.max+' points!</div>')
+				for (m=0;m<30;m++){
+					setTimeout(function(){
+						height += 2
+						top -= 2
+						$('#dog_win').css('top', top)
+						$('#dog_win').css('height', height)
+					},20*m)
+				}
+			}else{
+				var height = 10
+				var top = 360
+				$('#container').append('<div id="dog" style="top: 360px; left: 190px; height: 0px"></div>')
+				$('#container').append('<div id="winner">Winner is '+data.name+' with '+data.max+' points!</div>')
+				for (m=0;m<30;m++){
+					setTimeout(function(){
+						height += 2
+						top -= 2
+						$('#dog').css('top', top)
+						$('#dog').css('height', height)
+					},20*m)
+				}
+			}
+		}
+		var fadeIn = ''
+		function trackTime(){
+			socket.emit('time_changed')
+		}
+		socket.on('new_time', function(data){
+			$('#timebox').html('Time Left: '+data.time)
+			if (data.time <= 0){
+				socket.emit('record_scores')
+				$('.duck, .duckflipped').fadeOut(1500,function(){
+					ducks = [];
+					$('#container').html('')
+					$('#container').append('<div id="game_over">Game Over</div>')
+					$('#container').append('<div id="game_over_score">Score: '+your_score+'</div>')
+					$('#container').append('<button id="reset_game" onclick="ready()">Play Again</button>')
+					$('#reset_game, #game_over, #game_over_score').fadeIn(1000)
+				})
+				fadeIn = setTimeout(function(){$('#chat').fadeIn(1000)},7000);
+				clearInterval(track_time)
+				clearInterval(timer)
+			}
+		})
+
+		function ready(){
+			socket.emit('player_ready')
+		}
+		function changeColor(data){
+			for(v=0;v<data.all_id.length;v++){
+				$('#'+data.all_id[v]).html('Points: '+0);
+			}
+		}
+		var score_move_interval = ''
+		function restart(data){
+			console.log('')
+			$('#chat').css('display', 'none');
+			$('#leaderboard-page').css('display', 'none');
+			$('#container').css('display', 'block');
+			changeColor(data)
+			clearInterval(fadeIn)
+			$('#container').html('')
+			clearInterval(moving_score)
+			your_score = 0;
+			duck_count = 0;
+			ducks = [];
+			scores = [];
+			bullets = [];
+			rate = 3000;
+			timer = "";
+			scoreclass = 0;
+			bulletID = 1000;
+			game_time = 30;
+			velocity = 5;
+			velocity = 5;
+			duck_number = 0;
+			trackTime();
+			clearInterval(duck_time)
+			clearInterval(score_move_interval)
+			score_move_interval = setInterval(function(){scoreMove()},50)
+			setInterval(function(){removeBullet()},100)
+			duck_time = setInterval(function(){duckMove()},50)
+		}
+		trackTime();
+		function removeBullet(){
+			for(k=0;k<bullets.length;k++){
+				bullets[k].time += 1
+				if(bullets[k].time>5){
+					var number = k
+					number += 1000
+					$('#'+number).fadeOut(1000, function(){
+						$('#'+number).remove();
+					})
+				}
+			}
+		}
+		setInterval(function(){removeBullet()},100)
+		$('#container').click(function(e){
+			var top = e.clientY - 14
+			var left = e.clientX - 14
+			bullets.push({
+				time: 0
+			})
+			$('#container').append('<div id="'+bulletID+'"class="bullet" style="top:'+top+'; left:'+left+'"><img src="images/bullet2.png" width="100%" height="100%"></div>')
+			bulletID += 1
+		})
+			var leftcoor = ''
+			var topcoor = ''
+		function duck_clicked(duck){
+			leftcoor = ducks[duck].x
+			topcoor = ducks[duck].y - 15
+			var scorespeed = Math.floor(Math.abs(ducks[duck].vx))
+			$('#container').append('<div class="score '+scoreclass+'" style="top:'+topcoor+';left:'+leftcoor+'">'+scorespeed+'<div>')
+			your_score += scorespeed
+			socket.emit('updated_score', {score: scorespeed})
+			scoreclass += 1
+			scores.push({
+				x: leftcoor,
+				y: topcoor,
+				yincreased: 0,
+				font: 24
+			})
+			socket.emit('duck_was_clicked', {id: duck})
+		}
+		socket.on('remove_clicked_duck', function(data){
+			if (data.display){
+				leftcoor = ducks[data.id.id].x
+				topcoor = ducks[data.id.id].y - 15
+				scores.push({
+					x: leftcoor,
+					y: topcoor,
+					yincreased: 0,
+					font: 24
+				})
+				var ID = data.display
+				$('#container').append('<div class="score '+scoreclass+'" style="top:'+topcoor+';left:'+leftcoor+'; color: red;">'+data.users[ID].name+'<div>')
+				scoreclass+=1
+			}
+			remove_duck(data.id.id);
+		})
+		function remove_duck(duck){
+			$('#'+duck).find('img').attr('src', 'images/fallingduck.gif');
+			ducks[duck].vx = 0;
+			ducks[duck].vy = 5;
+		}
+
+		function scoreMove(){
+			for (j=0;j<scores.length;j++){
+				if(scores[j].yincreased <= 40){
+					scores[j].y -= 2;
+					scores[j].yincreased += 2;
+					$('.'+j).css('top', scores[j].y)
+					$('.'+j).css('font-size', scores[j].font)
+					if(scores[j].yincreased > 20){
+					scores[j].font -= 0.8
+					$('.'+j).css('font-size', scores[j].font)
+					$('.'+j).fadeOut(800,function(){
+						$('.'+j).remove()
+						})
+					}
+				}
+			}
+		}
+		var moving_score = setInterval(function(){scoreMove()},50)
+		function duckMove(){
+			for (i=0; i<=ducks.length-1; i++){
+				ducks[i].x += ducks[i].vx
+				ducks[i].y += ducks[i].vy
+				$("#"+i).css('left', ducks[i].x)
+				$("#"+i).css('top', ducks[i].y)
+				if (ducks[i].y>340){
+					$('#'+i).fadeOut(500,function(){
+						$('#'+i).remove()
+					});
+				}
+				if (ducks[i].x>830 || ducks[i].x<0 || ducks[i].y<0){
+					$('#'+i).remove();
+				}
+			}
+		}
+		socket.on('duck_created', function(data){
+			appendDuck(data.ducks)
+		})
+		function appendDuck(data){
+			if(data[duck_number].side == 0){
+				$('#container').append('<div id="'+data[duck_number].id+'" class="duck" style="top:'+data[duck_number].y+'px"  onclick="duck_clicked('+duck_number+')"><img src="images/duck.gif"></div>')
+			}else{
+				data[duck_number].x = 825
+				data[duck_number].vx = -data[duck_number].vx
+				$('#container').append('<div id="'+data[duck_number].id+'" class="duckflipped" style="top:'+data[duck_number].y+'px"  onclick="duck_clicked('+duck_number+')"><img src="images/duck.gif"></div>')
+				$("#"+duck_number).css('left', data[duck_number].x)
+		 	}
+		 	ducks.push(data[duck_number]);
+		 	duck_number += 1;
+		}
+		var duck_time = setInterval(function(){duckMove()},50)
+		var track_time = setInterval(function(){trackTime()},100000)
+
+	
+	</script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+		#container{
+			position: absolute;
+			border: 1px solid black;
+			width: 850px;
+			height: 550px;
+			background-image: url(images/background.png);
+		}
+		#chat{
+			position: absolute;
+			border:1px solid black;
+			width: 850px;
+			height: 550px;
+			background-color: lightgray;
+		}
+		#message{
+			width: 750px;
+			height: 30px;
+			font-size: 24px;
+		}
+		#messages{
+			width: 850px;
+			height: 490px;
+			background-color: lightgray;
+			overflow: auto;
+			color: #606060;
+		}
+		#submit{
+			top: 490px;
+			left: 750px;
+			position:absolute;
+			width: 101px;
+			height: 30px;
+			border: 1px solid black;
+			font-size: 18px;
+			background-color: lightgray;
+		}
+		p {
+			margin-top: 0px;
+			margin-bottom: 0px;
+			font-size: 20px;
+		}
+		#leaderboard-page{
+			display: none;
+			background-color: black;
+			position: absolute;
+			border:1px solid red;
+			width: 850px;
+			height: 550px;
+		}
+		#chatroom-leader{
+			position: absolute;
+			top: 520px;
+			left:0px;
+			width: 375px;
+			height: 30px;
+			font-size:18px;
+			border: 0px;
+			border-top: 1px solid white;
+			border-right: 1px solid white;
+			background-color: black;
+			color: white;
+		}
+		#leaderboard-leader{
+			position: absolute;
+			left: 375px;
+			top: 520px;
+			width: 375px;
+			height: 30px;
+			font-size:18px;
+			border: 0px;
+			border-top: 1px solid white;
+			border-right: 1px solid white;
+			background-color: black;
+			color: white;
+		}
+		#play_game-leader{
+			position: absolute;
+			top: 520px;
+			left: 750px;
+			width: 101px;
+			height: 30px;
+			font-size:18px;
+			color: white;
+			border-bottom: 0px;
+			border-top: 1px solid white;
+			border-left: 1px solid black;
+			border-right: 1px solid white;
+			background-color: red;
+		}
+		#play_game{
+			position: absolute;
+			top: 520px;
+			left: 750px;
+			width: 101px;
+			height: 30px;
+			font-size:18px;
+			color: white;
+			border-bottom: 0px;
+			border-top: 0px;
+			border-left: 1px solid black;
+			border-right: 1px solid black;
+			background-color: red;
+		}
+		#chatroom{
+			position: absolute;
+			top: 520px;
+			left:0px;
+			width: 375px;
+			height: 30px;
+			font-size:18px;
+			border: 0px;
+			border-right: 1px solid black;
+		}
+		#leaderboard{
+			position: absolute;
+			left: 375px;
+			top: 520px;
+			width: 375px;
+			height: 30px;
+			font-size:18px;
+			border: 0px;
+		}
+		#sidebar {
+			position: absolute;
+			border-right: 1px solid black;
+			border-top: 1px solid black;
+			border-bottom: 1px solid black;
+			width: 250px;
+			height: 550px;
+			left: 860px;
+			background-color: black;
+		}
+		#new_message{
+			height: 30px;
+		}
+		#container2{
+			width:950px;
+			height:550px;
+		}
+		.duckflipped{
+			position: absolute;
+			-moz-transform: scaleX(-1);
+	        -o-transform: scaleX(-1);
+	        -webkit-transform: scaleX(-1);
+	        transform: scaleX(-1);
+	        filter: FlipH;
+	        -ms-filter: "FlipH";
+		}
+		.duck{
+			position: absolute;	
+			z-index: 3;
+		}
+		#container {
+			position: absolute;
+			cursor: crosshair;
+		}
+		.spark{
+			position: absolute;
+			width: 25px;
+			height: 25px;
+		}
+		.score{
+			position: absolute;
+			text-align: center;
+			width: 38px;
+			height: 20px;
+			font-weight: bold;
+		}
+		#score{
+			width: 200px;
+			height: 25px;
+			left: 880px;
+			top: 60px;
+			font-size: 40px;
+			position: absolute;
+			color: white;
+			border-top: 2px solid white;
+		}
+		.bullet{
+			position: absolute;
+			width: 10px;
+			height: 10px;
+			z-index: 1;
+		}
+		#timebox{
+			width: 250px;
+			height: 50px;
+			left: 880px;
+			color: white;
+			font-size: 40;
+			position: absolute;
+		}
+		#reset_game{
+			position: absolute;
+			left: 355px;
+			top: 250px;
+			font-size: 24px;
+			color: white;
+			border: 1px solid black;
+			background-color: red;
+			border-radius: 10px;
+			display: none;
+		}
+		#game_over{
+			position: absolute;
+			top: 190px;
+			left: 360px;
+			font-size:24px;
+			color: black;
+			display: none;
+			font-weight: bold;
+		}
+		#game_over_score{
+			position: absolute;
+			top: 217px;
+			left: 375px;
+			font-size:24px;
+			color: black;
+			display: none;
+			font-weight: bold;
+		}
+		#winner{
+			text-align: center;
+			font-size: 30px;
+			font-weight: bold;
+		}
+		#dog {
+			position: absolute;
+			width: 60px;
+			background-size: cover;
+			background-image: url('images/dog.gif');
+		}
+		#dog_win {
+			position: absolute;
+			width: 80px;
+			background-size: cover;
+			background-image: url('images/dog_win.gif');
+		}
+		#introleft {
+			background-color:black;
+			position: absolute;
+			width:555px;
+			height:552px;
+		}
+		#introright {
+			background-color:black;
+			position: absolute;
+			left: 555px;
+			width:555px;
+			height:552px
+		}
+		#name {
+			position: absolute;
+			width: 200px;
+			top: 370px;
+			left: 505px;
+			font-size: 24px;
+			color: white;
+			font-weight: bold;
+			z-index: 3;
+		}
+		#player_name{
+			border-radius: 5px;
+		}
+		#enter {
+			top: 430px;
+			left: 525px;
+			position: absolute;
+			background-color: black;
+			color: white;
+			font-size: 24px;
+			font-weight: bold;
+			border: gray 2px solid;
+			border-radius: 15px;
+			z-index: 3;
+		}
+		#textbox {
+			top: 400px;
+			z-index: 3;
+			left: 480px;
+			position: absolute;
+		}
+		#logo{
+			left: 245px;
+			top: 10px;
+			position: absolute;
+			background-image: url('images/logo.png');
+			background-repeat: no-repeat;
+			width: 650px;
+			height: 350px;
+			z-index: 3;
+		}
+		.player_name{
+			width: 240px;
+			height: 45px;
+			left: 5px;
+			font-size: 40px;
+			position: absolute;
+			color: white;
+		}
+		.player_score{
+			width: 240px;
+			height: 45px;
+			left: 5px;
+			font-size: 40px;
+			position: absolute;
+			color: white;
+			border-bottom: 2px solid gray;
+		}
+		table tr td{
+			color: white;
+			font-size: 22px;
+			border: 1px solid red;
+			text-align: center;
+			width: 150px;
+			background-color: black;
+		}
+		table{
+			border: 1px solid red;
+			background-color: darkgray;
+		}
+		#board{
+			position: absolute;
+			top: 60px;
+			left: 190px;
+		}
+
