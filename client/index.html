@@ -55,21 +55,21 @@
 	var top_score = 90
 	var your_score = 0;
 	function createBoard(data){
-		console.log('LEADA')
 		var content
-		for(g=-1; g<9;g++){ 
+		for(g=-1; g<9;g++){
+		w = g+1 
 			if(g==-1){
 				content += '<table><tr><td colspan="3">Leaderboard</td>'
 			}else if(g==0){
 				if(data.leader[g].score>=0)
-				content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>" 
+				content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+w+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>" 
 				else
-					content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td></td></tr>" 
+					content += "<tr><td>Place</td><td>Name</td><td>Score</td></tr><tr><td>"+w+"</td><td>"+data.leader[g].name+"</td><td></td></tr>" 
 			}else{
 				if(data.leader[g].score>=0)
-					content += "<tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>"
+					content += "<tr><td>"+w+"</td><td>"+data.leader[g].name+"</td><td>"+data.leader[g].score+" Points</td></tr>"
 				else
-					content += "<tr><td>"+g+"</td><td>"+data.leader[g].name+"</td><td></td></tr>"
+					content += "<tr><td>"+w+"</td><td>"+data.leader[g].name+"</td><td></td></tr>"
 			}
 		}
 		$('#board').html(content)
